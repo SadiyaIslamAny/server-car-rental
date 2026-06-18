@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv')
 const cors = require('cors')
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 dotenv.config()
 
 const uri = process.env.MONGODB_URI;
@@ -26,6 +26,12 @@ async function run() {
     const db = client.db("car-rental")
     const carCollection = db.collection("cars")
 
+   app.get('/car', async(req,res)=>{
+    const result = await carCollection.find().toArray();
+    res.json(result)
+   })
+
+
     app.post('/car', async (req, res) => {
       const carData = req.body;
       console.log(carData)
@@ -33,6 +39,13 @@ async function run() {
       res.json(result)
     })
 
+
+    app.get('/car/:id', async(req,res)=>{
+      const {id} = req.params;
+      console.log(id)
+      const result = await carCollection.findOne({_id: new ObjectId(id)})
+      res.json(result)
+    })
 
 
 
