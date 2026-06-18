@@ -28,7 +28,7 @@ async function run() {
 
    app.get('/car', async(req,res)=>{
     const result = await carCollection.find().toArray();
-    res.json(result)
+    res.send(result)
    })
 
 
@@ -36,7 +36,7 @@ async function run() {
       const carData = req.body;
       console.log(carData)
       const result = await carCollection.insertOne(carData);
-      res.json(result)
+      res.send(result)
     })
 
 
@@ -44,9 +44,22 @@ async function run() {
       const {id} = req.params;
       console.log(id)
       const result = await carCollection.findOne({_id: new ObjectId(id)})
-      res.json(result)
+      res.send(result)
     })
 
+
+
+    app.patch('/car/:id', async(req,res)=>{
+            const {id} = req.params;
+            const updateData = req.body
+
+            const result = await carCollection.updateOne(
+              {_id: new ObjectId (id)},
+              {$set: updateData}
+            )
+
+            res.send(result)
+    } )
 
 
     await client.db("admin").command({ ping: 1 });
