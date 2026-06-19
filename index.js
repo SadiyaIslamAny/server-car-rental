@@ -26,6 +26,12 @@ async function run() {
     const db = client.db("car-rental")
     const carCollection = db.collection("cars")
 
+
+     app.get("/available-cars", async (req,res)=>{
+      const result = await carCollection.find().limit(6).toArray()
+      res.send(result)
+    })
+
    app.get('/car', async(req,res)=>{
     const result = await carCollection.find().toArray();
     res.send(result)
@@ -47,6 +53,13 @@ async function run() {
       res.send(result)
     })
 
+
+     app.get('/car/details/:id', async(req,res)=>{
+      const {id} = req.params;
+      console.log(id)
+      const result = await carCollection.findOne({_id: new ObjectId(id)})
+      res.send(result)
+    })
 
 
     app.patch('/car/:id', async(req,res)=>{
